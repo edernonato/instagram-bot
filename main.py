@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 
 INSTAGRAM_TAGS_TO_SEARCH_START = "https://www.instagram.com/explore/tags/"
 INSTAGRAM_TAGS_TO_SEARCH_END = "/?next=%2F"
-TAGS_TO_LIKE = ["life", "bodybuilding", "NewYork", "Brasil", "Futebol", "Footbal", "Corinthians"]
+TAGS_TO_LIKE = ["life", "bodybuilding", "NewYork", "Brasil", "Futebol", "Football", "Corinthians"]
 
 
 URL_LOGIN = "https://www.instagram.com/accounts/login/"
@@ -17,7 +17,7 @@ URL_PAGES = ["https://www.instagram.com/gym_motivation_0.2/followers/",
 URL_PAGE = choice(URL_PAGES)
 
 USERNAME = "YOUR INSTAGRAM USERNAME"
-PASSWORD = "YOUR INSTAGRAM USERNAME PASSWORD"
+PASSWORD = "YOUR INSTAGRAM PASSWORD"
 
 driver = webdriver.Chrome()
 driver.get(URL_LOGIN)
@@ -53,7 +53,8 @@ def start_following():
             timeout = time.time() + 60 * 2
             url_page = choice(URL_PAGES)
             driver.get(url_page)
-        buttons_div_followers = driver.find_elements(By.CSS_SELECTOR, "div div div div div div div div div div div div div div div div div div div div div div button")
+        buttons_div_followers = driver.find_elements(By.CSS_SELECTOR, "div div div div div div div div div div div div "
+                                                                      "div div div div div div div div div div button")
         count = 0
         number_of_follows = randint(1, 10)
         for button in buttons_div_followers:
@@ -70,7 +71,7 @@ def start_following():
                 h3_tags = driver.find_elements(By.CSS_SELECTOR, "h3")
                 for element in h3_tags:
                     if element.text == "Try Again Later":
-                        time.sleep(60)
+                        time.sleep(60 * 10)
                         return
                 print(exp)
 
@@ -102,4 +103,3 @@ while True:
         like_posts()
         driver.implicitly_wait(randint(0, 10))
         time.sleep(randint(0, 10))
-
