@@ -14,7 +14,8 @@ URL_PAGES = ["https://www.instagram.com/gym_motivation_0.2/followers/",
              "https://www.instagram.com/gym_lovers._00/followers/",
              "https://www.instagram.com/corinthians/followers/",
              "https://www.instagram.com/90min_football/followers/"]
-URL_PAGE = choice(URL_PAGES)
+# URL_PAGE = choice(URL_PAGES)
+
 
 USERNAME = "YOUR INSTAGRAM USERNAME"
 PASSWORD = "YOUR INSTAGRAM PASSWORD"
@@ -43,8 +44,7 @@ time.sleep(5)
 
 def start_following():
     """Follows people from the followers list of the pages of the URL_PAGES list."""
-    global URL_PAGE
-    driver.get(URL_PAGE)
+    driver.get(choice(URL_PAGES))
     driver.implicitly_wait(2)
     time.sleep(2)
     timeout = time.time() + 60 * 2
@@ -71,7 +71,9 @@ def start_following():
                 h3_tags = driver.find_elements(By.CSS_SELECTOR, "h3")
                 for element in h3_tags:
                     if element.text == "Try Again Later":
-                        time.sleep(60 * 10)
+                        scroll_timeout_try_again = time.time() + 60 * 30
+                        while time.time() < scroll_timeout_try_again:
+                            scroll_page()
                         return
                 print(exp)
 
@@ -96,7 +98,39 @@ def like_posts():
         print(exp)
 
 
+def scroll_page():
+    driver.get("https://instagram.com")
+    driver.implicitly_wait(3)
+    time.sleep(3)
+    scroll_timeout = time.time() + randint(60, 600)
+    try:
+        buttons = driver.find_elements(By.CSS_SELECTOR, "div div div div div div div div div div div div div div div"
+                                                        " div div div button")
+        for button in buttons:
+            print(button.text)
+            if button.text == "Not Now":
+                button.click()
+    except Exception as exp:
+        print(exp)
+
+    while time.time() < scroll_timeout:
+        try:
+            buttons = driver.find_elements(By.CSS_SELECTOR, "div section span button")
+            for button in buttons:
+                svg = button.find_element(By.CSS_SELECTOR, "div svg")
+                if svg.get_attribute("aria-label") == "Like":
+                    driver.implicitly_wait(randint(2, 10))
+                    time.sleep(randint(2, 10))
+                    button.click()
+                    break
+        except Exception as exp:
+            print(exp)
+        time.sleep(randint(0, 10))
+        driver.execute_script(f"window.scrollBy({randint(0,1)},{randint(5, 9)}00)", "")
+
+
 while True:
+    scroll_page()
     number_of_likes = randint(0, 13)
     start_following()
     for n in range(number_of_likes):
